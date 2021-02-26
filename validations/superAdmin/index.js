@@ -1,0 +1,1 @@
+module.exports.resValidation = require('./restaurant.validation')
