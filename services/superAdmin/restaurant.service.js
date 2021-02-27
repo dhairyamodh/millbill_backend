@@ -1,6 +1,4 @@
 const httpStatus = require('http-status');
-const { User } = require('../../models');
-const bcrypt = require("bcryptjs");
 const { Restaurant } = require('../../models/superAdmin');
 
 const all = async () => {
@@ -55,6 +53,7 @@ const all = async () => {
             {
                 $project: {
                     name: "$name",
+                    restaurant: "$$ROOT",
                     subStartDate: "$subStartDate",
                     subEndDate: "$subEndDate",
                     branchCount: { $size: "$branches" },
@@ -78,9 +77,6 @@ const create = async (data, files) => {
         } else {
             data.logo = "uploaded/logo/res_logo.png";
         }
-        const salt = await bcrypt.genSalt(10);
-        const hashPassword = await bcrypt.hash(data.password, salt);
-        await User.create({ name: data.name, email: data.email, password: hashPassword, mobile: data.contactNumber, role: 'restaurant' })
         await Restaurant.create({ ...data, database: data.name })
         return ({ status: httpStatus.OK, message: 'Restaurant Added Successfully' })
     } catch (error) {
@@ -88,6 +84,29 @@ const create = async (data, files) => {
     }
 }
 
+const update = async (data, files) => {
+    try {
+        if (files) {
+            files.map(file => {
+                data.logo = file.destination + '/' + file.filename
+            })
+        }
+        await Restaurant.findByIdAndUpdate(data._id, data);
+        return ({ status: httpStatus.OK, message: 'Restaurant Updated Successfully' })
+    } catch (error) {
+        return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
+    }
+}
+
+const remove = async (data) => {
+    try {
+        await Restaurant.findByIdAndDelete(data);
+        return ({ status: httpStatus.OK, message: 'Restaurant Deleted Successfully' })
+    } catch (error) {
+        return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
+    }
+}
+
 module.exports = {
-    all, create
+    all, create, update, remove
 }

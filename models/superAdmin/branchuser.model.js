@@ -21,6 +21,10 @@ const branchUserSchema = mongoose.Schema(
             type: String,
             require: true,
         },
+        userRole: {
+            type: String,
+            require: true,
+        },
         status: {
             type: Boolean,
             default: true,

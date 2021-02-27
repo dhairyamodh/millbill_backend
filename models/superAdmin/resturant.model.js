@@ -33,15 +33,17 @@ const restaurantSchema = mongoose.Schema(
             type: String,
             require: false
         },
-        themeColor: [{
-            primaryColor: {
-                type: String,
-            },
-            secondaryColor: {
-                type: String
-            }
-        }],
-        openingBalace: {
+        themeId: {
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: 'themes',
+            required: true,
+        },
+        subscriptionId: {
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: 'subscriptions',
+            required: true,
+        },
+        balance: {
             type: Number,
             require: true,
         },
@@ -63,17 +65,9 @@ const restaurantSchema = mongoose.Schema(
             require: true,
         },
         status: {
-            type: Boolean,
-            default: true,
+            type: String,
+            default: 'true',
         },
-        subStartDate: {
-            type: Date,
-            require: false,
-        },
-        subEndDate: {
-            type: Date,
-            require: false,
-        }
     },
     {
         timestamps: true,

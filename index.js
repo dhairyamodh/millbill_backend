@@ -11,6 +11,8 @@ mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
   });
 });
 
+mongoose.set('useFindAndModify', false);
+
 // const exitHandler = () => {
 //   if (server) {
 //     server.close(() => {
