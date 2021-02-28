@@ -15,6 +15,7 @@ const all = async () => {
                 $project: {
                     subscriptionName: "$subscriptionName",
                     subscriptionDuration: "$subscriptionDuration",
+                    subscription: "$$ROOT",
                     subscribers: { $size: "$restaurants" },
                 }
             },
@@ -34,6 +35,24 @@ const create = async (data) => {
     }
 }
 
+const update = async (data) => {
+    try {
+        await Subscription.findByIdAndUpdate(data._id, data)
+        return ({ status: httpStatus.OK, message: 'Subscription Updated Successfully' })
+    } catch (error) {
+        return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
+    }
+}
+
+const remove = async (data) => {
+    try {
+        await Subscription.findByIdAndDelete(data);
+        return ({ status: httpStatus.OK, message: 'Subscription Deleted Successfully' })
+    } catch (error) {
+        return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
+    }
+}
+
 module.exports = {
-    all, create
+    all, create, update, remove
 }

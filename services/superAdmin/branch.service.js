@@ -118,6 +118,7 @@ const getBranchByResId = async (data) => {
             {
                 $project: {
                     branchName: "$branchName",
+                    branch: "$$ROOT",
                     userCount: { $size: "$users" },
                     itemCount: { $size: "$items" }
                 }
@@ -139,6 +140,24 @@ const create = async (data) => {
     }
 }
 
+const update = async (data) => {
+    try {
+        await Branch.findByIdAndUpdate(data._id, data)
+        return ({ status: httpStatus.OK, message: 'Branch Updated Successfully' })
+    } catch (error) {
+        return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
+    }
+}
+
+const remove = async (data) => {
+    try {
+        await Branch.findByIdAndDelete(data);
+        return ({ status: httpStatus.OK, message: 'Branch Deleted Successfully' })
+    } catch (error) {
+        return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
+    }
+}
+
 module.exports = {
-    all, create, getBranchByResId
+    all, create, getBranchByResId, update, remove
 }

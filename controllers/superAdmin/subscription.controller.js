@@ -11,6 +11,16 @@ const create = catchAsync(async (req, res) => {
     res.status(response.status).send(response);
 });
 
+const update = catchAsync(async (req, res) => {
+    const response = await subscriptionService.update(req.body);
+    res.status(response.status).send(response);
+});
+
+const remove = catchAsync(async (req, res) => {
+    const response = await subscriptionService.remove(req.params.id);
+    res.status(response.status).send(response);
+});
+
 module.exports = {
-    all, create
+    all, create, update, remove
 };

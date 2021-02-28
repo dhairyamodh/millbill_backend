@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.get('/all', resController.all);
 router.post('/create', upload.any(), resController.create);
-router.put('/update', resController.update);
+router.put('/update', upload.any(), resController.update);
 router.delete('/delete/:id', resController.remove);
 
 module.exports = router;

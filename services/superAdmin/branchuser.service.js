@@ -20,16 +20,13 @@ const all = async (resId, branchId) => {
             $unwind: '$restaurantdata'
         },
         {
-            $addFields: {
+            $project: {
+                branchUser: '$$ROOT',
                 userName: "$userName",
                 userRole: "$userRole",
+                restaurantId: '$restaurantId',
                 userMobile: "$userMobile",
                 restaurantName: "$restaurantdata.name",
-            }
-        },
-        {
-            $project: {
-                'restaurantdata': 0
             }
         }
         ]);
@@ -46,6 +43,7 @@ const all = async (resId, branchId) => {
         }))
         return ({ status: httpStatus.OK, data: userdata })
     } catch (error) {
+        console.log(error);
         return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
     }
 }
@@ -62,6 +60,24 @@ const create = async (data) => {
     }
 }
 
+const update = async (data) => {
+    try {
+        await BranchUser.findByIdAndUpdate(data._id, data)
+        return ({ status: httpStatus.OK, message: 'User Updated Successfully' })
+    } catch (error) {
+        return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
+    }
+}
+
+const remove = async (data) => {
+    try {
+        await BranchUser.findByIdAndDelete(data);
+        return ({ status: httpStatus.OK, message: 'User Deleted Successfully' })
+    } catch (error) {
+        return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
+    }
+}
+
 module.exports = {
-    all, create
+    all, create, update, remove
 }

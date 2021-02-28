@@ -6,5 +6,7 @@ const router = express.Router();
 
 router.get('/all', subscriptionController.all);
 router.post('/create', subscriptionController.create);
+router.put('/update', subscriptionController.update);
+router.delete('/delete/:id', subscriptionController.remove);
 
 module.exports = router;
