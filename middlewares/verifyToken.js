@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const { User } = require("../models");
 
 async function auth(req, res, next) {
-    const token = req.header("auth-token");
+    const token = req.header("Authorization");
     if (!token) return res.status(401).send({ message: "Access denied" });
 
     try {
@@ -18,8 +18,7 @@ async function auth(req, res, next) {
             return res.status(404).send({ message: "user not found" });
         }
         req.userId = verified._id;
-        req.language = users.selectedLanguage;
-
+        req.resdb = verified.restaurant;
         next();
     } catch (error) {
         res.status(400).send({ message: "Invalid Token" });

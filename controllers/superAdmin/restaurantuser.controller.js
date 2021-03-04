@@ -1,23 +1,23 @@
 const catchAsync = require('../../utils/catchAsync');
-const { branchUserService } = require('../../services/superAdmin');
+const { restaurantUserService } = require('../../services/superAdmin');
 
 const all = catchAsync(async (req, res) => {
-    const response = await branchUserService.all(req.params.resId, req.params.branchId);
+    const response = await restaurantUserService.all(req.params.resId, req.params.branchId);
     res.status(response.status).send(response);
 });
 
 const create = catchAsync(async (req, res) => {
-    const response = await branchUserService.create(req.body);
+    const response = await restaurantUserService.create(req.body);
     res.status(response.status).send(response);
 });
 
 const update = catchAsync(async (req, res) => {
-    const response = await branchUserService.update(req.body);
+    const response = await restaurantUserService.update(req.body);
     res.status(response.status).send(response);
 });
 
 const remove = catchAsync(async (req, res) => {
-    const response = await branchUserService.remove(req.params.id);
+    const response = await restaurantUserService.remove(req.params.id);
     res.status(response.status).send(response);
 });
 

@@ -1,11 +1,11 @@
 const httpStatus = require('http-status');
-const { BranchUser, Branch } = require('../../models/superAdmin');
+const { RestaurantUser, Branch, Restaurant } = require('../../models/superAdmin');
 const bcrypt = require("bcryptjs");
 const User = require('../../models/user.model');
 const all = async (resId, branchId) => {
     try {
         const data = { ...(resId != 'all' && { restaurantId: ObjectId(resId) }), ...(branchId != 'all' && { branchId: ObjectId(branchId) }) }
-        const users = await BranchUser.aggregate([{
+        const users = await RestaurantUser.aggregate([{
             $match: data
         },
         {
@@ -52,8 +52,9 @@ const create = async (data) => {
     try {
         const salt = await bcrypt.genSalt(10);
         const hashPassword = await bcrypt.hash(data.password, salt);
-        await User.create({ name: data.userName, mobile: data.userMobile, password: hashPassword, role: data.role })
-        await BranchUser.create({ ...data, userRole: data.role })
+        const restaurant = await Restaurant.findById(data.restaurantId)
+        await User.create({ name: data.userName, mobile: data.userMobile, password: hashPassword, role: data.role, database: restaurant.database })
+        await RestaurantUser.create({ ...data, database: restaurant.database, userRole: data.role })
         return ({ status: httpStatus.OK, message: 'User Added Successfully' })
     } catch (error) {
         return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
@@ -62,7 +63,7 @@ const create = async (data) => {
 
 const update = async (data) => {
     try {
-        await BranchUser.findByIdAndUpdate(data._id, data)
+        await RestaurantUser.findByIdAndUpdate(data._id, data)
         return ({ status: httpStatus.OK, message: 'User Updated Successfully' })
     } catch (error) {
         return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
@@ -71,7 +72,7 @@ const update = async (data) => {
 
 const remove = async (data) => {
     try {
-        await BranchUser.findByIdAndDelete(data);
+        await RestaurantUser.findByIdAndDelete(data);
         return ({ status: httpStatus.OK, message: 'User Deleted Successfully' })
     } catch (error) {
         return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })

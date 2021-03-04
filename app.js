@@ -8,6 +8,11 @@ const config = require('./config/config');
 const morgan = require('./config/morgan');
 const superAdminRoutes = require('./routes/superAdmin')
 const routes = require('./routes');
+const restaurantListener = require('./config/restaurantListener');
+const setrestaurantdb = require('./config/setrestaurantdb');
+const restaurantModels = require('./models/restaurant')
+const { branchSchema, Branch } = require('./models/restaurant/branch.model');
+const restaurantRoutes = require('./routes/restaurants')
 const ApiError = require('./utils/ApiError');
 
 const app = express();
@@ -39,10 +44,16 @@ app.options('*', cors());
 
 global.ObjectId = require('mongodb').ObjectID;
 
+
+global.restaurants = {};
+global.activedb = undefined;
+global.restaurantdbconn = [];
+
+
 // v1 api routes
 app.use('/api', routes);
 app.use('/api/superadmin', superAdminRoutes);
-
+app.use('/api/restaurant', restaurantRoutes)
 // send back a 404 error for any unknown api request
 // app.use((req, res, next) => {
 //   next(new ApiError(httpStatus.NOT_FOUND, 'Not found'));

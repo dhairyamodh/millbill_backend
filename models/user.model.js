@@ -26,7 +26,12 @@ const userSchema = mongoose.Schema(
     },
     mobile: {
       type: String,
-      require: true
+      require: true,
+      unique: true,
+    },
+    database: {
+      type: String,
+      require: true,
     },
     role: {
       type: String,

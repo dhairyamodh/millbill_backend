@@ -1,5 +1,5 @@
 module.exports.Theme = require('./theme.model')
 module.exports.Restaurant = require('./resturant.model')
-module.exports.Branch = require('./branch.model')
-module.exports.BranchUser = require('./branchuser.model')
+// module.exports.Branch = require('./branch.model')
+module.exports.RestaurantUser = require('./restaurantuser.model')
 module.exports.Subscription = require('./Subscription.model')
