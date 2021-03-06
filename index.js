@@ -10,7 +10,6 @@ mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
     logger.info(`Listening to port ${config.port}`);
   });
 });
-
 mongoose.set('useFindAndModify', false);
 
 // const exitHandler = () => {

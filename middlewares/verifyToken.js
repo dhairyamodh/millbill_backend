@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { User } = require("../models");
+const { Restaurant } = require("../models/superAdmin");
 
 async function auth(req, res, next) {
     const token = req.header("Authorization");
@@ -18,7 +19,10 @@ async function auth(req, res, next) {
             return res.status(404).send({ message: "user not found" });
         }
         req.userId = verified._id;
-        req.resdb = verified.restaurant;
+
+        if (verified.restaurant) {
+            req.resdb = verified.restaurant;
+        }
         next();
     } catch (error) {
         res.status(400).send({ message: "Invalid Token" });

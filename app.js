@@ -8,11 +8,9 @@ const config = require('./config/config');
 const morgan = require('./config/morgan');
 const superAdminRoutes = require('./routes/superAdmin')
 const routes = require('./routes');
-const restaurantListener = require('./config/restaurantListener');
-const setrestaurantdb = require('./config/setrestaurantdb');
-const restaurantModels = require('./models/restaurant')
-const { branchSchema, Branch } = require('./models/restaurant/branch.model');
+const path = require('path');
 const restaurantRoutes = require('./routes/restaurants')
+const { setallrestaurantdb } = require('./config/setrestaurantdb');
 const ApiError = require('./utils/ApiError');
 
 const app = express();
@@ -21,6 +19,8 @@ if (config.env !== 'test') {
   app.use(morgan.successHandler);
   app.use(morgan.errorHandler);
 }
+
+app.use(express.static(path.join(__dirname, '/')));
 
 // set security HTTP headers
 app.use(helmet());
@@ -49,11 +49,18 @@ global.restaurants = {};
 global.activedb = undefined;
 global.restaurantdbconn = [];
 
+app.use(setallrestaurantdb());
 
 // v1 api routes
 app.use('/api', routes);
+
 app.use('/api/superadmin', superAdminRoutes);
+
 app.use('/api/restaurant', restaurantRoutes)
+// app.use((req, res, next) => {
+//   console.log(global.restaurants);
+//   return next()
+// })
 // send back a 404 error for any unknown api request
 // app.use((req, res, next) => {
 //   next(new ApiError(httpStatus.NOT_FOUND, 'Not found'));

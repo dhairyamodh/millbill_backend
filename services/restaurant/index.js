@@ -1,0 +1,5 @@
+module.exports.restaurantUserService = require('./restaurantuser.service')
+module.exports.branchService = require('./branch.service')
+module.exports.itemCategoryService = require('./itemcategory.service')
+module.exports.itemService = require('./item.service')
+module.exports.hotKeyService = require('./hotkey.service')

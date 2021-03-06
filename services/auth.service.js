@@ -4,21 +4,19 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const setrestaurantdb = require('../config/setrestaurantdb');
 const { Restaurant } = require('../models/superAdmin');
-const dbswitch = async (user) => {
-    console.log(user);
+// const dbswitch = async (user) => {
 
-    switch (user.role) {
-        case 'restaurantadmin':
-            await setrestaurantdb(user.database)
-            break;
+//     switch (user.role) {
+//         case 'restaurantadmin':
+//             await setrestaurantdb(user.restaurantId)
+//             break;
 
-        default:
-            break;
-    }
-}
+//         default:
+//             break;
+//     }
+// }
 
 const login = async (data) => {
-    console.log(data);
     const user = await User.findOne({ mobile: data.mobile });
 
     if (!user) {
@@ -27,9 +25,8 @@ const login = async (data) => {
     const validPassword = await bcrypt.compare(data.password, user.password);
     if (!validPassword)
         return ({ status: httpStatus.NOT_FOUND, message: "Invalid password" });
-    const restaurant = await Restaurant.findById(user.restaurantId)
-    const token = jwt.sign({ _id: user._id, restaurant: user.database }, process.env.JWT_SECRET);
-    await dbswitch(user)
+    const token = jwt.sign({ _id: user._id, restaurant: user.restaurantId }, process.env.JWT_SECRET);
+    // await dbswitch(user)
 
     return ({ status: httpStatus.OK, user: user, token: token, message: "Login Successs" });
 }

@@ -1,13 +1,13 @@
 const catchAsync = require('../../utils/catchAsync');
-const { restaurantUserService } = require('../../services/superAdmin');
+const { restaurantUserService } = require('../../services/restaurant');
 
 const all = catchAsync(async (req, res) => {
-    const response = await restaurantUserService.all(req.params.resId, req.params.branchId);
+    const response = await restaurantUserService.all(global.restaurants[req.resdb], req.params.resId, req.params.branchId);
     res.status(response.status).send(response);
 });
 
 const create = catchAsync(async (req, res) => {
-    const response = await restaurantUserService.create(req.body);
+    const response = await restaurantUserService.create(req.resdb, req.body);
     res.status(response.status).send(response);
 });
 
@@ -17,7 +17,7 @@ const update = catchAsync(async (req, res) => {
 });
 
 const remove = catchAsync(async (req, res) => {
-    const response = await restaurantUserService.remove(req.params.id);
+    const response = await restaurantUserService.remove(req.body);
     res.status(response.status).send(response);
 });
 

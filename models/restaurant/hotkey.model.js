@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('../plugins');
 
-const restaurantUserSchema = mongoose.Schema(
+const hotkeySchema = mongoose.Schema(
     {
         restaurantId: {
             type: mongoose.SchemaTypes.ObjectId,
@@ -13,24 +13,21 @@ const restaurantUserSchema = mongoose.Schema(
             ref: 'branches',
             required: false,
         },
-        userName: {
-            type: String,
-            required: true,
+        hotkeyItemId: {
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: 'items',
+            required: false,
         },
-        userMobile: {
+        hotkey: {
             type: String,
             require: true,
         },
-        userRole: {
-            type: String,
-            require: true,
-        },
-        database: {
-            type: String,
-            require: true,
+        hotkeyItem: {
+            type: Object,
+            require: true
         },
         status: {
-            type: Boolean,
+            type: String,
             default: true,
         }
     },
@@ -40,9 +37,9 @@ const restaurantUserSchema = mongoose.Schema(
 );
 
 // add plugin that converts mongoose to json
-restaurantUserSchema.plugin(toJSON);
-restaurantUserSchema.plugin(paginate);
+hotkeySchema.plugin(toJSON);
+hotkeySchema.plugin(paginate);
 
-const RestaurantUser = mongoose.model('RestaurantUser', restaurantUserSchema);
+const HotKey = mongoose.model('HotKey', hotkeySchema);
 
-module.exports = RestaurantUser;
+module.exports = { hotkeySchema, HotKey }

@@ -1,10 +1,6 @@
 const catchAsync = require('../../utils/catchAsync');
-const { branchService } = require('../../services/superAdmin');
+const { branchService } = require('../../services/restaurant');
 
-const all = catchAsync(async (req, res) => {
-    const response = await branchService.all();
-    res.status(response.status).send(response);
-});
 
 const getBranchByResId = catchAsync(async (req, res) => {
     const response = await branchService.getBranchByResId(req.params.id);
@@ -22,10 +18,10 @@ const update = catchAsync(async (req, res) => {
 });
 
 const remove = catchAsync(async (req, res) => {
-    const response = await branchService.remove(req.params.id);
+    const response = await branchService.remove(req.body);
     res.status(response.status).send(response);
 });
 
 module.exports = {
-    all, create, getBranchByResId, update, remove
+    create, update, remove, getBranchByResId
 };

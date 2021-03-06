@@ -1,8 +1,5 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
-const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('./plugins');
-const { roles } = require('../config/roles');
 
 const userSchema = mongoose.Schema(
   {
@@ -14,7 +11,6 @@ const userSchema = mongoose.Schema(
     email: {
       type: String,
       required: false,
-      unique: true,
       trim: true,
       lowercase: true,
     },
@@ -29,9 +25,15 @@ const userSchema = mongoose.Schema(
       require: true,
       unique: true,
     },
-    database: {
-      type: String,
-      require: true,
+    restaurantId: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: 'restaurants',
+      required: false,
+    },
+    branchId: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: 'branches',
+      required: false,
     },
     role: {
       type: String,

@@ -1,28 +1,34 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('../plugins');
 
-const branchSchema = mongoose.Schema(
+const itemSchema = mongoose.Schema(
     {
         restaurantId: {
             type: mongoose.SchemaTypes.ObjectId,
             ref: 'restaurants',
             required: true,
         },
-        branchName: {
+        branchId: {
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: 'branches',
+            required: false,
+        },
+        categoryId: {
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: 'itemcategory',
+            required: false,
+        },
+        itemName: {
             type: String,
             required: true,
         },
-        branchCode: {
+        itemImage: {
             type: String,
             required: true,
         },
-        contactPerson: {
-            type: String,
+        itemPrice: {
+            type: Number,
             require: true,
-        },
-        contactNumber: {
-            type: String,
-            require: false
         },
         status: {
             type: Boolean,
@@ -35,9 +41,9 @@ const branchSchema = mongoose.Schema(
 );
 
 // add plugin that converts mongoose to json
-branchSchema.plugin(toJSON);
-branchSchema.plugin(paginate);
+itemSchema.plugin(toJSON);
+itemSchema.plugin(paginate);
 
-const Branch = mongoose.model('Branch', branchSchema);
+const Item = mongoose.model('Item', itemSchema);
 
-module.exports = { branchSchema, Branch }
+module.exports = { itemSchema, Item }
