@@ -8,25 +8,25 @@ const getBranchByResId = async (data) => {
                 const currentBranch = await key.Branch.aggregate([
                     {
                         $lookup: {
-                            from: "branchusers",
-                            // localField: "_id",
-                            // foreignField: "chapter_id",
+                            from: "restaurantusers",
+                            localField: "_id",
+                            foreignField: "branchId",
                             as: "users",
-                            let: { branchId: '$_id' },
-                            pipeline: [
-                                {
-                                    $match: {
-                                        $expr: {
-                                            $and: [
-                                                { $eq: ['$$branchId', '$branchId'] },
-                                            ]
-                                        }
-                                    }
-                                },
-                                {
-                                    $sort: { _id: -1 }
-                                }
-                            ]
+                            // let: { branchId: '$_id' },
+                            // pipeline: [
+                            //     {
+                            //         $match: {
+                            //             $expr: {
+                            //                 $and: [
+                            //                     { $eq: ['$$branchId', '$branchId'] },
+                            //                 ]
+                            //             }
+                            //         }
+                            //     },
+                            //     {
+                            //         $sort: { _id: -1 }
+                            //     }
+                            // ]
                         }
                     },
                     {
@@ -71,25 +71,25 @@ const getBranchByResId = async (data) => {
             branch = await global.restaurants[data].Branch.aggregate([
                 {
                     $lookup: {
-                        from: "branchusers",
-                        // localField: "_id",
-                        // foreignField: "chapter_id",
+                        from: "restaurantusers",
+                        localField: "_id",
+                        foreignField: "branchId",
                         as: "users",
-                        let: { branchId: '$_id' },
-                        pipeline: [
-                            {
-                                $match: {
-                                    $expr: {
-                                        $and: [
-                                            { $eq: ['$$branchId', '$branchId'] },
-                                        ]
-                                    }
-                                }
-                            },
-                            {
-                                $sort: { _id: -1 }
-                            }
-                        ]
+                        // let: { branchId: '$_id' },
+                        // pipeline: [
+                        //     {
+                        //         $match: {
+                        //             $expr: {
+                        //                 $and: [
+                        //                     { $eq: ['$$branchId', '$branchId'] },
+                        //                 ]
+                        //             }
+                        //         }
+                        //     },
+                        //     {
+                        //         $sort: { _id: -1 }
+                        //     }
+                        // ]
                     }
                 },
                 {

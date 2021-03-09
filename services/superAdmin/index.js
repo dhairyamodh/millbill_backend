@@ -1,3 +1,5 @@
 module.exports.themeService = require('./theme.service')
 module.exports.resService = require('./restaurant.service')
 module.exports.subscriptionService = require('./subscription.service')
+module.exports.commonCollectionService = require('./commoncollection.service')
+module.exports.restaurantSubscriptionService = require('./restaurantsubscription.service')

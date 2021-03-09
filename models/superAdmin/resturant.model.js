@@ -59,10 +59,13 @@ const restaurantSchema = mongoose.Schema(
             type: String,
             default: 'resturant',
         },
-        database: {
-            type: String,
-            unique: true,
+        subStartDate: {
+            type: Date,
             require: true,
+        },
+        subEndDate: {
+            type: Date,
+            require: true
         },
         status: {
             type: String,

@@ -4,7 +4,6 @@ const models = require('../models/restaurant');
 
 async function setrestaurantdb(restaurantId, next) {
     let currentRestaurant = await Restaurant.findById(restaurantId)
-    console.log("restaurantId", restaurantId);
     const restaurantName = await currentRestaurant.name
     if (typeof restaurantName !== 'undefined') {
         if (restaurantName) {

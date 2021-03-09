@@ -2,11 +2,10 @@ const httpStatus = require('http-status');
 
 const all = async (resId, branchId) => {
     try {
-        const data = { ...(branchId != undefined && { branchId: ObjectId(branchId) }) }
+        const data = { ...(branchId != 'all' && { branchId: ObjectId(branchId) }) }
         const category = await global.restaurants[resId].ItemCategory.find(data)
         return ({ status: httpStatus.OK, data: category })
     } catch (error) {
-        console.log(error);
         return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
     }
 }
@@ -42,7 +41,6 @@ const update = async (data, files) => {
 }
 
 const remove = async (data) => {
-    console.log(data);
     try {
         await global.restaurants[data.restaurantId].ItemCategory.findByIdAndDelete(data.id);
         return ({ status: httpStatus.OK, message: 'Category Deleted Successfully' })

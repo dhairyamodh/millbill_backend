@@ -4,26 +4,46 @@ const User = require('../../models/user.model');
 const { Restaurant } = require('../../models/superAdmin');
 const all = async (db, resId, branchId) => {
     try {
-        const data = { ...(branchId != 'all' && { branchId: ObjectId(branchId) }) }
-        const users = await global.restaurants[resId].RestaurantUser.aggregate([{
-            $match: data
-        },
-        {
-            $project: {
-                branchUser: '$$ROOT',
-                userName: "$userName",
-                userRole: "$userRole",
-                restaurantId: '$restaurantId',
-                branchId: '$branchId',
-                userMobile: "$userMobile",
+        const data = { ...(resId != 'all' && { restaurantId: ObjectId(resId) }), ...(branchId != 'all' && { branchId: ObjectId(branchId) }) }
+        let users = [];
+        if (resId == 'all') {
+            await Promise.all(Object.values(global.restaurants).map(async (key, index) => {
+                const allusers = await key.RestaurantUser.aggregate([
+                    {
+                        $project: {
+                            branchUser: '$$ROOT',
+                            userName: "$userName",
+                            userRole: "$userRole",
+                            restaurantId: '$restaurantId',
+                            branchId: '$branchId',
+                            userMobile: "$userMobile",
+                        }
+                    }
+                ]);
+                users.push(...allusers)
+            }))
+        } else {
+
+            users = await global.restaurants[resId].RestaurantUser.aggregate([{
+                $match: data
+            },
+            {
+                $project: {
+                    branchUser: '$$ROOT',
+                    userName: "$userName",
+                    userRole: "$userRole",
+                    restaurantId: '$restaurantId',
+                    branchId: '$branchId',
+                    userMobile: "$userMobile",
+                }
             }
+            ]);
         }
-        ]);
         const userdata = await Promise.all(users.map(async (item) => {
 
-            if (resId) {
-                let restaurant = await Restaurant.findById(resId);
-                let branch = await global.restaurants[resId].Branch.findById(item.branchId)
+            if (item.restaurantId) {
+                let restaurant = await Restaurant.findById(item.restaurantId);
+                let branch = await global.restaurants[item.restaurantId].Branch.findById(item.branchId)
                 item.branchName = branch ? branch.branchName : undefined;
                 item.associatedWith = branch ? `${restaurant.name} (${branch.branchName})` : restaurant.name
             }
@@ -42,7 +62,7 @@ const create = async (restaurantId, data) => {
         await global.restaurants[data.restaurantId].RestaurantUser.create({ ...data, userRole: data.role })
         const salt = await bcrypt.genSalt(10);
         const hashPassword = await bcrypt.hash(data.password, salt);
-        await User.create({ name: data.userName, mobile: data.userMobile, password: hashPassword, role: data.role, restaurantId: data.restaurantId })
+        await User.create({ name: data.userName, mobile: data.userMobile, password: hashPassword, role: data.role, restaurantId: data.restaurantId, branchId: data.branchId ? data.branchId : undefined })
 
         return ({ status: httpStatus.OK, message: 'User Added Successfully' })
     } catch (error) {
