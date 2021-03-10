@@ -16,7 +16,11 @@ const orderSchema = mongoose.Schema(
         orderNumber: {
             type: Number,
             required: true,
-            default: 0
+            default: 1
+        },
+        branchOrderNumber: {
+            type: String,
+            required: true,
         },
         orderBy: {
             type: String,

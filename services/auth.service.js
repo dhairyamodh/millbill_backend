@@ -2,8 +2,7 @@ const httpStatus = require('http-status');
 const { User } = require('../models')
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const setrestaurantdb = require('../config/setrestaurantdb');
-const { Restaurant } = require('../models/superAdmin');
+const getUserBranchCode = require('../middlewares/userBranchCode')
 // const dbswitch = async (user) => {
 
 //     switch (user.role) {
@@ -17,7 +16,7 @@ const { Restaurant } = require('../models/superAdmin');
 // }
 
 const login = async (data) => {
-    const user = await User.findOne({ mobile: data.mobile });
+    let user = await User.findOne({ mobile: data.mobile });
 
     if (!user) {
         return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: "User does not exist" });
@@ -26,19 +25,19 @@ const login = async (data) => {
     if (!validPassword)
         return ({ status: httpStatus.NOT_FOUND, message: "Invalid password" });
     const token = jwt.sign({ _id: user._id, restaurant: user.restaurantId }, process.env.JWT_SECRET);
-    // await dbswitch(user)
 
-    return ({ status: httpStatus.OK, user: user, token: token, message: "Login Successs" });
+    const newuser = await getUserBranchCode(user)
+
+    return ({ status: httpStatus.OK, user: newuser, token: token, message: "Login Successs" });
 }
 
 const details = async (data) => {
-    const user = await User.findOne({ _id: data });
-
+    let user = await User.findOne({ _id: data });
     if (!user) {
         return ({ status: httpStatus.NOT_FOUND, message: "user does not exist" });
     }
-
-    return ({ status: httpStatus.OK, user: user, message: "User details found successfully" });
+    const newuser = await getUserBranchCode(user)
+    return ({ status: httpStatus.OK, user: newuser, message: "User details found successfully" });
 }
 
 module.exports = {

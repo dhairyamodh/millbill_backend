@@ -43,11 +43,14 @@ const update = async (data, files) => {
 const remove = async (data) => {
     try {
         await global.restaurants[data.restaurantId].ItemCategory.findByIdAndDelete(data.id);
+        await global.restaurants[data.restaurantId].Item.updateMany({ categoryId: data.id }, { $set: { categoryId: undefined } });
         return ({ status: httpStatus.OK, message: 'Category Deleted Successfully' })
     } catch (error) {
         return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
     }
 }
+
+
 
 module.exports = {
     create, all, update, remove

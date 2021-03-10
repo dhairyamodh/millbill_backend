@@ -88,6 +88,16 @@ const remove = async (data) => {
     }
 }
 
+const removeAll = async (data) => {
+    try {
+        await User.deleteMany(data)
+        await global.restaurants[data.restaurantId].RestaurantUser.deleteMany(data)
+        return ({ status: httpStatus.OK, message: 'User Deleted Successfully' })
+    } catch (error) {
+        return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
+    }
+}
+
 module.exports = {
-    all, create, update, remove
+    all, create, update, remove, removeAll
 }

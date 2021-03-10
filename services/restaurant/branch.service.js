@@ -156,6 +156,11 @@ const update = async (data) => {
 const remove = async (data) => {
     try {
         await global.restaurants[data.restaurantId].Branch.findByIdAndDelete(data._id);
+        const newdata = { restaurantId: data.restaurantId, branchId: data._id }
+        await global.restaurants[data.restaurantId].ItemCategory.deleteMany(newdata);
+        await global.restaurants[data.restaurantId].Item.deleteMany(newdata);
+        await global.restaurants[data.restaurantId].HotKey.deleteMany(newdata);
+        await global.restaurants[data.restaurantId].Order.deleteMany(newdata);
         return ({ status: httpStatus.OK, message: 'Branch Deleted Successfully' })
     } catch (error) {
         return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })

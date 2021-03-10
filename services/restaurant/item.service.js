@@ -53,6 +53,7 @@ const update = async (db, data, files) => {
 const remove = async (db, data) => {
     try {
         await db.Item.findByIdAndDelete(data._id || data.id);
+        await db.HotKey.deleteMany({ hotkeyItemId: data._id || data.id });
         return ({ status: httpStatus.OK, message: 'Item Deleted Successfully' })
     } catch (error) {
         return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
