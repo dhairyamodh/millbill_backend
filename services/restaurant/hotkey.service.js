@@ -19,8 +19,9 @@ const all = async (db, resId, branchId) => {
     }
 }
 
-const create = async (db, data, files) => {
+const create = async (db, data) => {
     try {
+        console.log(data);
         const item = await db.Item.findById(data.hotkeyItemId);
         await db.HotKey.create({ ...data, hotkeyItem: item })
         return ({ status: httpStatus.OK, message: 'Hotkey Added Successfully' })
@@ -29,12 +30,13 @@ const create = async (db, data, files) => {
     }
 }
 
-const update = async (db, data, files) => {
+const update = async (db, data) => {
     try {
-        const item = await db.Item.findById(data.hotkeyItemId);
-        await db.HotKey.findByIdAndUpdate(data.id, { ...data, hotkeyItem: item })
+        console.log(data);
+        await db.HotKey.findByIdAndUpdate(data._id, data)
         return ({ status: httpStatus.OK, message: 'Hotkey Updated Successfully' })
     } catch (error) {
+        console.log(error);
         return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
     }
 }

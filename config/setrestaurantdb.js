@@ -4,7 +4,7 @@ const models = require('../models/restaurant');
 
 async function setrestaurantdb(restaurantId, next) {
     let currentRestaurant = await Restaurant.findById(restaurantId)
-    const restaurantName = await currentRestaurant.name
+    const restaurantName = await currentRestaurant.name.split(" ").join("");
     if (typeof restaurantName !== 'undefined') {
         if (restaurantName) {
             console.log('setting db for restaurant ' + restaurantName);
@@ -41,7 +41,7 @@ function setallrestaurantdb() {
 
         if (currentRestaurant.length > 0) {
             currentRestaurant.forEach((res, index) => {
-                const restaurantName = res.name;
+                const restaurantName = res.name.split(" ").join("");
                 const restaurantId = res._id;
                 console.log('setting db for restaurant ' + restaurantName);
 

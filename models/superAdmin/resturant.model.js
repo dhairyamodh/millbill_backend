@@ -38,11 +38,6 @@ const restaurantSchema = mongoose.Schema(
             ref: 'themes',
             required: true,
         },
-        subscriptionId: {
-            type: mongoose.SchemaTypes.ObjectId,
-            ref: 'subscriptions',
-            required: true,
-        },
         balance: {
             type: Number,
             require: true,
@@ -58,14 +53,6 @@ const restaurantSchema = mongoose.Schema(
         role: {
             type: String,
             default: 'resturant',
-        },
-        subStartDate: {
-            type: Date,
-            require: true,
-        },
-        subEndDate: {
-            type: Date,
-            require: true
         },
         status: {
             type: String,

@@ -1,6 +1,7 @@
 const express = require('express');
 const { itemController } = require('../../controllers/restaurant')
 const upload = require('../../multer/uploadItemImage')
+const compressimage = require('../../middlewares/compressimages')
 
 const router = express.Router();
 

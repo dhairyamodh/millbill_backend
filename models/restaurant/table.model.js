@@ -21,6 +21,10 @@ const tableSchema = mongoose.Schema(
             type: String,
             require: true
         },
+        tableType: {
+            type: String,
+            require: true
+        },
         tablePrice: {
             type: Number,
             require: true,

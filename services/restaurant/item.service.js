@@ -1,4 +1,5 @@
 const httpStatus = require('http-status');
+const { itemValidation } = require('../../validations/superAdmin')
 
 const all = async (db, resId, branchId) => {
     try {
@@ -21,6 +22,10 @@ const all = async (db, resId, branchId) => {
 
 const create = async (db, data, files) => {
     try {
+        const { error } = itemValidation.create(data)
+        if (error) {
+            return ({ status: httpStatus.NOT_FOUND, message: error.details[0].message })
+        }
         if (files) {
             files.map(file => {
                 data.itemImage = file.destination + '/' + file.filename
@@ -38,6 +43,11 @@ const create = async (db, data, files) => {
 
 const update = async (db, data, files) => {
     try {
+        const { error } = itemValidation.update(data)
+        console.log(error);
+        if (error) {
+            return ({ status: httpStatus.NOT_FOUND, message: error.details[0].message })
+        }
         if (files) {
             files.map(file => {
                 data.itemImage = file.destination + '/' + file.filename
@@ -46,6 +56,7 @@ const update = async (db, data, files) => {
         await db.Item.findByIdAndUpdate(data.id, { ...data, itemPrice: parseInt(data.itemPrice) })
         return ({ status: httpStatus.OK, message: 'Item Updated Successfully' })
     } catch (error) {
+        console.log(error);
         return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
     }
 }

@@ -1,27 +1,23 @@
 const Joi = require('joi');
 const { password, objectId } = require('../custom.validation');
 
-const create = {
-    body: Joi.object().keys({
+const create = (data) => {
+    const schema = Joi.object({
         name: Joi.string().required(),
         email: Joi.string().required().email(),
         address: Joi.string().required(),
         contactPerson: Joi.string().required(),
         contactNumber: Joi.number().integer(),
         tagLine: Joi.string(),
-        themColor: Joi.string().required(),
+        themeId: Joi.string().required(),
         logo: Joi.string(),
-        openingBalace: Joi.number().integer().required(),
+        balance: Joi.number().required(),
         cgst: Joi.number().integer().required(),
         sgst: Joi.number().integer().required(),
-    }),
-};
-
-const get = {
-    query: Joi.object().keys({
-        name: Joi.string(),
-    }),
-};
+        status: Joi.string().required()
+    }).unknown();
+    return schema.validate(data);
+}
 
 // const getOne = {
 //   params: Joi.object().keys({
@@ -50,5 +46,4 @@ const get = {
 
 module.exports = {
     create,
-    get,
 };

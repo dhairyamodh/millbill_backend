@@ -30,6 +30,11 @@ const userSchema = mongoose.Schema(
       ref: 'restaurants',
       required: false,
     },
+    restaurantUserId: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: 'restaurantusers',
+      required: true,
+    },
     branchId: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: 'branches',

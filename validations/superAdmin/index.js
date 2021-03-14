@@ -1,1 +1,6 @@
 module.exports.resValidation = require('./restaurant.validation')
+module.exports.branchValidation = require('./branch.validation')
+module.exports.restaurantUserValidation = require('./restaurantuser.validation')
+module.exports.itemValidation = require('./item.validation')
+module.exports.categoryValidation = require('./category.validation')
+module.exports.hotkeyValidation = require('./hotkey.validation')

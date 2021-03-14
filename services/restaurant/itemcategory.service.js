@@ -1,4 +1,5 @@
 const httpStatus = require('http-status');
+const { categoryValidation } = require('../../validations/superAdmin')
 
 const all = async (resId, branchId) => {
     try {
@@ -6,12 +7,17 @@ const all = async (resId, branchId) => {
         const category = await global.restaurants[resId].ItemCategory.find(data)
         return ({ status: httpStatus.OK, data: category })
     } catch (error) {
+        console.log(error);
         return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
     }
 }
 
 const create = async (data, files) => {
     try {
+        const { error } = categoryValidation.create(data)
+        if (error) {
+            return ({ status: httpStatus.NOT_FOUND, message: error.details[0].message })
+        }
         if (files) {
             files.map(file => {
                 data.categoryImage = file.destination + '/' + file.filename
@@ -28,6 +34,10 @@ const create = async (data, files) => {
 
 const update = async (data, files) => {
     try {
+        const { error } = categoryValidation.update(data)
+        if (error) {
+            return ({ status: httpStatus.NOT_FOUND, message: error.details[0].message })
+        }
         if (files) {
             files.map(file => {
                 data.categoryImage = file.destination + '/' + file.filename
@@ -36,6 +46,7 @@ const update = async (data, files) => {
         await global.restaurants[data.restaurantId].ItemCategory.findByIdAndUpdate(data.id, data)
         return ({ status: httpStatus.OK, message: 'Category Updated Successfully' })
     } catch (error) {
+        console.log(error);
         return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
     }
 }

@@ -13,14 +13,13 @@ const all = async (resId, branchId) => {
 
 const create = async (data) => {
     try {
+
         const lastOrder = await global.restaurants[data.restaurantId].Order.find({ branchId: data.branchId }).sort({ _id: -1 }).limit(1)
         if (lastOrder.length > 0 && data.orderNumber == lastOrder[0].orderNumber) {
-            console.log('if', lastOrder[0].orderNumber);
 
             data.orderNumber = lastOrder[0].orderNumber++;
             data.branchOrderNumber = data.branchCode + (data.orderNumber++)
         } else {
-            console.log('else');
             data.branchOrderNumber = data.branchCode + data.orderNumber
         }
         const order = await global.restaurants[data.restaurantId].Order.create(data)

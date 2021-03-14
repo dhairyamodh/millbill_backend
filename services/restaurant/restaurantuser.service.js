@@ -58,23 +58,38 @@ const all = async (db, resId, branchId) => {
 
 const create = async (restaurantId, data) => {
     try {
-
-        await global.restaurants[data.restaurantId].RestaurantUser.create({ ...data, userRole: data.role })
+        const checkMobile = await User.find({ mobile: data.userMobile })
+        if (checkMobile.length > 0) {
+            return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: "Mobile number already exist!, Please try another mobile number" })
+        }
+        const restaurantUser = await global.restaurants[data.restaurantId].RestaurantUser.create({ ...data, userRole: data.role })
         const salt = await bcrypt.genSalt(10);
         const hashPassword = await bcrypt.hash(data.password, salt);
-        await User.create({ name: data.userName, mobile: data.userMobile, password: hashPassword, role: data.role, restaurantId: data.restaurantId, branchId: data.branchId ? data.branchId : undefined })
+        await User.create({ name: data.userName, mobile: data.userMobile, password: hashPassword, role: data.role, restaurantUserId: restaurantUser._id, restaurantId: data.restaurantId, branchId: data.branchId ? data.branchId : undefined })
 
         return ({ status: httpStatus.OK, message: 'User Added Successfully' })
     } catch (error) {
+        console.log(error);
         return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
     }
 }
 
 const update = async (data) => {
     try {
+        const checkMobile = await User.find({ mobile: data.userMobile })
+        if (checkMobile.length > 0) {
+            const checkuser = await User.find({ mobile: data.userMobile, restaurantUserId: data._id })
+
+            if (checkuser.length <= 0) {
+                return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: "Mobile number already exist!, Please try another mobile number" })
+            }
+        }
+
         await global.restaurants[data.restaurantId].RestaurantUser.findByIdAndUpdate(data._id, data)
+        await User.findOneAndUpdate({ restaurantUserId: data._id }, { name: data.userName, mobile: data.userMobile })
         return ({ status: httpStatus.OK, message: 'User Updated Successfully' })
     } catch (error) {
+        console.log(error);
         return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
     }
 }
@@ -82,6 +97,8 @@ const update = async (data) => {
 const remove = async (data) => {
     try {
         await global.restaurants[data.restaurantId].RestaurantUser.findByIdAndDelete(data._id)
+        await global.restaurants[data.restaurantId].RestaurantUser.findOneAndDelete({ restaurantUserId: data._id })
+        await User.findOneAndDelete({ restaurantUserId: data._id });
         return ({ status: httpStatus.OK, message: 'User Deleted Successfully' })
     } catch (error) {
         return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })

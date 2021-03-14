@@ -11,6 +11,7 @@ const routes = require('./routes');
 const path = require('path');
 const restaurantRoutes = require('./routes/restaurants')
 const { setallrestaurantdb } = require('./config/setrestaurantdb');
+const httpStatus = require('http-status');
 const ApiError = require('./utils/ApiError');
 
 const app = express();
@@ -51,7 +52,6 @@ global.restaurantdbconn = [];
 
 app.use(setallrestaurantdb());
 
-// v1 api routes
 app.use('/api', routes);
 
 app.use('/api/superadmin', superAdminRoutes);
@@ -62,9 +62,9 @@ app.use('/api/restaurant', restaurantRoutes)
 //   return next()
 // })
 // send back a 404 error for any unknown api request
-// app.use((req, res, next) => {
-//   next(new ApiError(httpStatus.NOT_FOUND, 'Not found'));
-// });
+app.use((req, res, next) => {
+  next(res.status(httpStatus.NOT_FOUND).send('Not Found'));
+});
 
 
 
