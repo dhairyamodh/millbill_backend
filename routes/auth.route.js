@@ -10,7 +10,7 @@ function delay(req, res, next) {
     setTimeout(() => { next() }, 5000)
 }
 
-router.post('/login', validate(authValidation.login), delay, authController.login);
+router.post('/login', validate(authValidation.login), authController.login);
 router.get('/details', verify, authController.details);
 
 module.exports = router;
