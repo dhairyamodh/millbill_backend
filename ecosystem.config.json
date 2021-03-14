@@ -6,9 +6,10 @@
       "instances": 1,
       "autorestart": true,
       "watch": false,
+      "ignore_watch": ["uploaded"],
       "watch_options": {
         "followSymlinks": false
-      },
+    },
       "time": true
     }
   ]

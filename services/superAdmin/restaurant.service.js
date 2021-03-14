@@ -7,7 +7,8 @@ const all = async () => {
         const restaurant = await Restaurant.find();
         const newAllRes = await Promise.all(restaurant.map(async (value, index) => {
             let branchCount = [], userCount = [];
-            if (global.restaurants[value.id] != {}) {
+            console.log(global.restaurants);
+            if (typeof global.restaurants[value.id] != 'undefined') {
                 branchCount = await global.restaurants[value.id].Branch.find();
                 userCount = await global.restaurants[value.id].RestaurantUser.find();
             }
